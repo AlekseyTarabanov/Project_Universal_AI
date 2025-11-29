@@ -15,5 +15,14 @@ def search(query):
     q_emb = embed_texts([query])
     _, ids = index.search(q_emb, TOP_K)
 
-    return [chunks[i] for i in ids[0]]
+    # фильтруем дубликаты
+    seen = set()
+    results = []
+    for i in ids[0]:
+        chunk = chunks[i]
+        if chunk not in seen:
+            results.append(chunk)
+            seen.add(chunk)
+
+    return results
 
