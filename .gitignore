@@ -1,0 +1,44 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.pickle
+*.log
+
+# Virtual environments
+venv/
+.env/
+.env*/ 
+
+# Jupyter
+.ipynb_checkpoints/
+
+# --- IDE crap ---
+.vscode/
+.idea/
+
+# --- OS specific ---
+.DS_Store
+Thumbs.db
+
+data/raw/
+data/processed/
+data/index/
+
+# Output files (results of search)
+output/*.txt
+output/*.json
+
+# Cache from models
+models/
+cache/
+.huggingface/
+
+# FAISS index files
+*.index
+
+# Temporary working files
+tmp/
+temp/
+
