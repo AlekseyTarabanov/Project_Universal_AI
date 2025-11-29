@@ -14,7 +14,7 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-# --- IDE crap ---
+# IDE crap
 .vscode/
 .idea/
 
@@ -22,18 +22,27 @@ venv/
 .DS_Store
 Thumbs.db
 
-data/raw/
-data/processed/
-data/index/
+data/raw/*
+data/processed/*
+data/index/*
+
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/index/.gitkeep
+!output/.gitkeep
 
 # Output files (results of search)
 output/*.txt
 output/*.json
 
 # Cache from models
-models/
-cache/
-.huggingface/
+models/*
+cache/*
+.huggingface/*
+
+models/*
+cache/*
+.huggingface/*
 
 # FAISS index files
 *.index
