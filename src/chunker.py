@@ -5,29 +5,50 @@ import nltk
 nltk.download("punkt")
 from nltk.tokenize import sent_tokenize
 
-from src.config import CHUNK_SIZE, CHUNKS_PATH
+from src.config import CHUNKS_PATH
 
-def split_into_chunks(text, max_chunk_size=CHUNK_SIZE):
+def split_into_chunks(text, max_chunk_size, overlap_ratio=0.25):
     sentences = sent_tokenize(text, language="russian")
+
     chunks = []
-    current_chunk = ""
+    current_chunk = []
+    current_len = 0
+
+    overlap_len = int(max_chunk_size * overlap_ratio)
 
     for sent in sentences:
-        # добавляем предложение в текущий чанк
-        if len(current_chunk) + len(sent) <= max_chunk_size:
-            if current_chunk:
-                current_chunk += " " + sent
-            else:
-                current_chunk = sent
+        sent_len = len(sent)
+
+        # если предложение помещается в текущий чанк
+        if current_len + sent_len <= max_chunk_size:
+            current_chunk.append(sent)
+            current_len += sent_len
         else:
-            chunks.append(current_chunk.strip())
-            current_chunk = sent
+            # сохраняем чанк
+            chunk_text = " ".join(current_chunk).strip()
+            chunks.append(chunk_text)
+
+            # формируем overlap — последние предложения
+            overlap_chunk = []
+            overlap_current_len = 0
+
+            for prev_sent in reversed(current_chunk):
+                overlap_current_len += len(prev_sent)
+                overlap_chunk.insert(0, prev_sent)
+                if overlap_current_len >= overlap_len:
+                    break
+
+            # начинаем новый чанк с overlap
+            current_chunk = overlap_chunk + [sent]
+            current_len = overlap_current_len + sent_len
 
     if current_chunk:
-        chunks.append(current_chunk.strip())
+        chunks.append(" ".join(current_chunk).strip())
 
     # сохраняем чанки
     with open(CHUNKS_PATH, "w", encoding="utf-8") as f:
         json.dump(chunks, f, ensure_ascii=False, indent=2)
 
     return chunks
+
+
